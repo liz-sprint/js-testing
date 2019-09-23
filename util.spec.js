@@ -1,4 +1,4 @@
-const { generateText, checkAndGenerate } = require('./util.js');
+const { generateText, checkAndGenerate, validateInput, createElement} = require('./util.js');
 const puppeteer = require('puppeteer');
 
 test('should output name and age', () => {
@@ -19,11 +19,11 @@ test('should validate and output name & age', () => {
     expect(text).toBe('Liz (29 years old)');
 });
 
-test('should create object with text and correct class on e2e', async () => {
+xtest('should create object with text and correct class on e2e', async () => {
     const browser =  await puppeteer.launch({
         headless: false,
-        slowMo: 80,
-        args:['--window-size=1920,1080']
+        // slowMo: 80,
+        // args:['--window-size=1920,1080']
     });
     const page = await browser.newPage();
     await page.goto('file:///Users/lizzepeda/demos/js-testing/index.html');
@@ -37,3 +37,18 @@ test('should create object with text and correct class on e2e', async () => {
     const finalText = await page.$eval('.user-item', el => el.textContent);
     expect(finalText).toBe('Liz (20 years old)')
 }, 10000);
+
+test('should validate name input', () => {
+    const nameValidation = validateInput('Liz', true, false);
+    expect(nameValidation).toBeTruthy();
+});
+
+test('should validate age input', () => {
+    const ageValidation = validateInput(30, false, true);
+    expect(ageValidation).toBeTruthy();
+});
+
+test('should create element with name & age', () => {
+    const createEl = createElement('li', 'Liz (29 years old)', 'user-item');
+    expect(createEl.innerHTML).toBe('Liz (29 years old)')
+});
